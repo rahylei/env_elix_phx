@@ -1,0 +1,20 @@
+FROM elixir:1.14.1
+
+WORKDIR /app
+
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install -y apt-utils
+RUN apt-get install -y build-essential
+RUN apt-get install -y inotify-tools
+RUN apt-get install vim -y
+
+#this is a test about ad a user that no be root
+RUN useradd -ms /bin/bash test_user
+USER test_user
+RUN cd /home/test_user
+
+RUN mix local.hex --force
+RUN mix archive.install --force hex phx_new 
+RUN mix local.rebar --force
+
+COPY . /app
